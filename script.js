@@ -44,18 +44,35 @@ $(document).ready(function() {
 	}
 	
 	//Now call the shuffle function and save the result of what shuffle returns into your deck variable
-	
+    deck = shuffle(deck);
 	var cards_player_1 = [];
 	var cards_player_2 = [];
 	// write a function called deal that will evently divide the deck up between the two players
-	
-	
+
+    var deal = function(deck) {
+      for (var i = 0; i < deck.length; i++) {
+      	if (i % 2 === 1) {
+      		cards_player_1.push(deck[i]);
+      	}
+      	else {
+      		cards_player_2.push(deck[i]);
+      	}
+      }
+    }
+    deal(deck);
+
 	//create a function (algorithm) called "war" that takes two cards as parameters, compares them and returns a winner. A tie should return false.
-	var war = function(){
-	
-		
-	}
-	
+	var war = function(card1, card2) {
+	  if (card1.number > card2.number) {
+        return 'player one wins';
+	  }	else if (card1.number < card2.number) {
+	  	return 'player two wins';
+	  } else if (card1.number === card2.number) {
+	  	return 'tie';
+	  }
+	};
+
+
 	var advance = function(){
 		//take the top two cards and display them
 		if (cards_player_1.length) {
@@ -74,7 +91,27 @@ $(document).ready(function() {
 		//compare the cards
 		//give the winner both cards (at end of deck)
 	var play = function(){
-		
+
+		var winner = war(cards_player_1[0], cards_player_2[0]);
+
+		if (winner === 'player one wins') {
+			cards_player_1.push(cards_player_1.shift());
+			cards_player_1.push(cards_player_2.shift());
+		} else if (winner === 'player two wins') {
+			cards_player_2.push(cards_player_1.shift());
+			cards_player_2.push(cards_player_2.shift());
+		} else if (winner === 'tie') {
+
+			var tieWinner = war(cards_player_1[3], cards_player_2[3]);
+
+            if (tieWinner === 'player one wins') {
+			  cards_player_1 = cards_player_1.concat(cards_player_1.splice(0, 4));
+			  cards_player_1 = cards_player_1.concat(cards_player_2.splice(0, 4));
+		    } else if (tieWinner === 'player two wins') {
+			  cards_player_2 = cards_player_2.concat(cards_player_1.splice(0, 4));
+			  cards_player_2 = cards_player_2.concat(cards_player_2.splice(0, 4));
+			}
+		}
 		//this function (defined below) will continue to the next turn
 		advance();
 	}
